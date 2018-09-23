@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/note_title"
         android:maxLines="2"
+        android:inputType="text"
         style="@style/EditTextStyle"/>
 
     <EditText
@@ -20,6 +21,7 @@
         android:layout_height="match_parent"
         android:hint="@string/note_content"
         android:gravity="start"
+        android:inputType="text"
         style="@style/EditTextStyle"/>
 
 </LinearLayout>

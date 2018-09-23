@@ -8,8 +8,7 @@ import android.view.MenuItem
 import com.deepak.knote.db.Note
 import com.deepak.knote.db.NotesRepository
 import kotlinx.android.synthetic.main.activity_note.*
-import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.toast
+import org.jetbrains.anko.*
 
 class NoteActivity : AppCompatActivity() {
 
@@ -48,5 +47,18 @@ class NoteActivity : AppCompatActivity() {
 
     private fun validateInput(title: String, content: String): Boolean {
         return !(TextUtils.isEmpty(title) && TextUtils.isEmpty(content))
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val title = note_title.text.toString()
+        val content = note_content.text.toString()
+
+        if (title.isNotEmpty() || content.isNotEmpty()) {
+            alert("Are you sure you want to discard your changes") {
+                yesButton { finish() }
+                noButton { it.dismiss() }
+            }
+        }
     }
 }

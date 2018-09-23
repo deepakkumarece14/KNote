@@ -17,6 +17,10 @@ import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
+const val NOTE_ID = "NOTE_ID"
+const val NOTE_TITLE = "NOTE_TITLE"
+const val NOTE_CONTENT = "NOTE_CONTENT"
+
 class MainActivity : AppCompatActivity() {
     private lateinit var adapter: KNoteAdapter
     private lateinit var noteList : List<Note>
@@ -31,24 +35,24 @@ class MainActivity : AppCompatActivity() {
         noteViewModel.getAllNotes().observe(this, Observer {
             toast("noteList changed")
         })
-//        database = MyNoteDatabase.getInstance(this@MainActivity)
+
         liveNoteList = NotesRepository(applicationContext).getAllNotes()
-//        noteList = NotesRepository(applicationContext).getAllNotes()
+        noteList = NotesRepository(applicationContext).getAllNotesList()
 
         val itemDecoration = DividerItemDecoration(applicationContext, DividerItemDecoration.VERTICAL)
         recyclerView.layoutManager = LinearLayoutManager(applicationContext)
         recyclerView.addItemDecoration(itemDecoration)
-        adapter = KNoteAdapter(noteList)            //TODO(" noteList is not initialized")
-        recyclerView.adapter = KNoteAdapter(noteList)
         recyclerView.hasFixedSize()
+        adapter = KNoteAdapter(noteList) { note -> onItemClick(note) }
+        recyclerView.adapter = adapter
 
-        val simpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        val simpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
                 return false
             }
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.layoutPosition
-                if (direction == ItemTouchHelper.LEFT) {
+                if (direction == ItemTouchHelper.RIGHT) {
                     val swipedNote = viewHolder.itemView.tag as Note
                     val id = swipedNote.id
                     swipedNote.id = id
@@ -64,16 +68,17 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun refreshRecyclerView() {
-        liveNoteList = NotesRepository(applicationContext).getAllNotes()
-        adapter = KNoteAdapter(noteList)
-        recyclerView.adapter = adapter
-        adapter.notifyDataSetChanged()
+    private fun onItemClick(note: Note?) {
+        val id = note?.id
+        val title = note?.noteTitle.toString()
+        val content = note?.noteContent.toString()
+
+        startActivity<UpdateNoteActivity>(NOTE_ID to id,NOTE_TITLE to title,NOTE_CONTENT to content)
     }
 
-    override fun onResume() {
-        super.onResume()
-        refreshRecyclerView()
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 
     override fun onDestroy() {

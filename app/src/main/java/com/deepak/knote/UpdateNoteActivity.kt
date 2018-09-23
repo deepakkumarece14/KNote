@@ -13,13 +13,18 @@ import org.jetbrains.anko.toast
 
 class UpdateNoteActivity : AppCompatActivity() {
     private var id: Int = 0
+    private var title: String? = null
+    private var content: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_update_note)
 
-        id = intent.getIntExtra("ID",0)
+        id = intent.getIntExtra(NOTE_ID,0)
+        title = intent?.getStringExtra(NOTE_TITLE).toString()
+        content = intent?.getStringExtra(NOTE_CONTENT).toString()
 
+        loadNoteInfo()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -33,6 +38,13 @@ class UpdateNoteActivity : AppCompatActivity() {
             else -> return false
         }
         return  super.onOptionsItemSelected(item)
+    }
+
+    private fun loadNoteInfo() {
+        update_note_title.setText(title)
+        update_note_content.setText(content)
+        update_note_content.selectionEnd
+        update_note_content.requestFocus()
     }
 
     private fun updateNote() {
