@@ -1,27 +1,23 @@
-@file:Suppress("unused")
-
 package com.deepak.knote.db
 
+import android.arch.lifecycle.LiveData
 import android.content.Context
+import kotlinx.coroutines.experimental.runBlocking
 import org.jetbrains.anko.doAsync
 
 class NotesRepository(context: Context) {
-    private var database : MyNoteDatabase? = null
-    private lateinit var noteList : List<Note>
+    private var database : MyNoteDatabase? = MyNoteDatabase.getInstance(context)
+    private lateinit var noteList : LiveData<List<Note>>
 
-    init {
-        database = MyNoteDatabase.getInstance(context)
-    }
-
-    fun getAllNotes(): List<Note> {
-        doAsync {
+    fun getAllNotes(): LiveData<List<Note>> {
+        runBlocking {
 //            database = MyNoteDatabase.getInstance(context)
             noteList = database?.noteDao()?.getAllNotes()!!
         }
         return noteList
     }
 
-    fun getNoteById(id: Int): List<Note> {
+    fun getNoteById(id: Int): LiveData<List<Note>> {
         doAsync {
 //            database = MyNoteDatabase.getInstance(context)
             noteList = database?.noteDao()?.getNoteById(id)!!

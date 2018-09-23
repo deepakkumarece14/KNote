@@ -8,4 +8,13 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="EditTextStyle" parent="Base.Widget.AppCompat.EditText">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:textColorLink">@android:color/background_light</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:inputType">text</item>
+        <item name="android:layout_margin">4dp</item>
+    </style>
+
 </resources>

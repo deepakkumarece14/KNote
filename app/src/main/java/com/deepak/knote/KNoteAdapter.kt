@@ -10,7 +10,7 @@ import org.jetbrains.anko.find
 
 class KNoteAdapter(private val noteList: List<Note>) : RecyclerView.Adapter<KNoteAdapter.KNoteViewHolder>() {
     override fun onCreateViewHolder(viewGroup: ViewGroup, position: Int): KNoteViewHolder {
-        val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.item_layout,viewGroup)
+        val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.item_note,viewGroup)
         return KNoteViewHolder(view)
     }
 
@@ -20,9 +20,7 @@ class KNoteAdapter(private val noteList: List<Note>) : RecyclerView.Adapter<KNot
         viewHolder.noteContent?.text = note.noteContent
     }
 
-    override fun getItemCount(): Int {
-        return noteList.size
-    }
+    override fun getItemCount(): Int = noteList.size
 
     fun removeNote(position: Int) {
         noteList.drop(position)
@@ -32,6 +30,5 @@ class KNoteAdapter(private val noteList: List<Note>) : RecyclerView.Adapter<KNot
     class KNoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var noteTitle : TextView? = itemView.find(R.id.noteTitle) as TextView
         var noteContent : TextView? = itemView.find(R.id.noteContent) as TextView
-
     }
 }

@@ -1,5 +1,8 @@
 package com.deepak.knote
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
@@ -12,22 +15,30 @@ import com.deepak.knote.db.NotesRepository
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.toast
 
 class MainActivity : AppCompatActivity() {
     private lateinit var adapter: KNoteAdapter
     private lateinit var noteList : List<Note>
+    private lateinit var liveNoteList : LiveData<List<Note>>
+    private lateinit var noteViewModel: NoteViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        noteViewModel = ViewModelProviders.of(this)[NoteViewModel::class.java]
+        noteViewModel.getAllNotes().observe(this, Observer {
+            toast("noteList changed")
+        })
 //        database = MyNoteDatabase.getInstance(this@MainActivity)
-        noteList = NotesRepository(applicationContext).getAllNotes()
+        liveNoteList = NotesRepository(applicationContext).getAllNotes()
+//        noteList = NotesRepository(applicationContext).getAllNotes()
 
         val itemDecoration = DividerItemDecoration(applicationContext, DividerItemDecoration.VERTICAL)
         recyclerView.layoutManager = LinearLayoutManager(applicationContext)
         recyclerView.addItemDecoration(itemDecoration)
-        adapter = KNoteAdapter(noteList)
+        adapter = KNoteAdapter(noteList)            //TODO(" noteList is not initialized")
         recyclerView.adapter = KNoteAdapter(noteList)
         recyclerView.hasFixedSize()
 
@@ -54,7 +65,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refreshRecyclerView() {
-        noteList = NotesRepository(applicationContext).getAllNotes()
+        liveNoteList = NotesRepository(applicationContext).getAllNotes()
         adapter = KNoteAdapter(noteList)
         recyclerView.adapter = adapter
         adapter.notifyDataSetChanged()

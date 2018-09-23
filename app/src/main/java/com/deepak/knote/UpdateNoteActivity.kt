@@ -7,15 +7,18 @@ import android.view.Menu
 import android.view.MenuItem
 import com.deepak.knote.db.Note
 import com.deepak.knote.db.NotesRepository
-import kotlinx.android.synthetic.main.activity_note.*
+import kotlinx.android.synthetic.main.activity_update_note.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 
-class NoteActivity : AppCompatActivity() {
+class UpdateNoteActivity : AppCompatActivity() {
+    private var id: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_note)
+        setContentView(R.layout.activity_update_note)
+
+        id = intent.getIntExtra("ID",0)
 
     }
 
@@ -26,19 +29,19 @@ class NoteActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId) {
-            R.id.action_save_note -> insertNote()
+            R.id.action_save_note -> updateNote()
             else -> return false
         }
         return  super.onOptionsItemSelected(item)
     }
 
-    private fun insertNote() {
-        val title = note_title.text.toString()
-        val content = note_content.text.toString()
-        val note = Note(noteTitle = title,noteContent = content)
+    private fun updateNote() {
+        val title = update_note_title.text.toString()
+        val content = update_note_content.text.toString()
+        val note = Note(id,title,content)
         if (validateInput(title,content)) {
-            NotesRepository(applicationContext).insertNote(note)
-            toast("Notes inserted successfully...")
+            NotesRepository(applicationContext).updateNote(note)
+            toast("Notes updated successfully...")
             finish()
             startActivity<MainActivity>()
         }else {
@@ -46,7 +49,7 @@ class NoteActivity : AppCompatActivity() {
         }
     }
 
-    private fun validateInput(title: String, content: String): Boolean {
+    private fun validateInput(title: String,content: String): Boolean {
         return !(TextUtils.isEmpty(title) && TextUtils.isEmpty(content))
     }
 }

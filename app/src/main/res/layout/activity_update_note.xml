@@ -7,7 +7,7 @@
     tools:context=".NoteActivity">
 
     <EditText
-        android:id="@+id/note_title"
+        android:id="@+id/update_note_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/note_title"
@@ -15,7 +15,7 @@
         style="@style/EditTextStyle"/>
 
     <EditText
-        android:id="@+id/note_content"
+        android:id="@+id/update_note_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:hint="@string/note_content"
